@@ -32,6 +32,9 @@ Edit the .java file to enter your local Kali machines IP
 ```bash
 cd attacker/exploit && sudo nano Exploit.java
 ```
+```bash
+sudo apt install openjdk-11-jdk -y
+```
 Once you have updated your java file to point to your Kali machine's IP, You need to compile it
 ```bash
 sudo javac -source 1.8 -target 1.8 Exploit.java
@@ -89,10 +92,9 @@ cd TargetServer/log4j-lab
 ```
 You will need to download the log4j dependanies for the vulnerable java application to run
 ```bash
-mkdir log4j && cd log4j
-
-wget https://repo1.maven.org/maven2/org/apache/logging/log4j/log4j-core/2.14.1/log4j-core-2.14.1.jar
-wget https://repo1.maven.org/maven2/org/apache/logging/log4j/log4j-api/2.14.1/log4j-api-2.14.1.jar
+sudo wget https://archive.apache.org/dist/logging/log4j/2.14.1/apache-log4j-2.14.1-bin.tar.gz
+sudo tar -xzf apache-log4j-2.14.1-bin.tar.gz
+sudo mv apache-log4j-2.14.1-bin log4j
 ```
 
 To run the Application just run 
