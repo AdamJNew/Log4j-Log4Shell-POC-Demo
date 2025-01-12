@@ -1,6 +1,6 @@
 # Log4Shell POC (CVE-2021-44228)
 
-This is a fork from [marcourbano's](https://github.com/marcourbano/CVE-2021-44228/) repo but with a clearer explanation on setting it up. It is also setup to allow a reverse shell from the labs target server.
+This is a fork from [marcourbano's](https://github.com/marcourbano/CVE-2021-44228/) repo but with a clearer explanation on setting it up and using an ubuntu server rather than docker. It is also setup to allow a reverse shell from the labs target server.
 
 The scope of this repository is to provide all the components needed to exploit CVE-2021-44228, nicknamed [Log4Shell](https://www.lunasec.io/docs/blog/log4j-zero-day/),   
 and to show how to exploit it.
