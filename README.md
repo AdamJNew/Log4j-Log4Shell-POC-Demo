@@ -52,11 +52,11 @@ In a seperate Terminal Tab/Window:
 
 Install Maven if required
 ```bash
-sudo apt installl maven -y
+sudo apt install maven -y
 ```
 
 ```bash
-mvn clean package -DskipTests
+sudo mvn clean package -DskipTests
 ```
 
 **2.** Move to `target` folder and spin up the server specifying `http_server_ip` and `http_server_port`
