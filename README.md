@@ -144,7 +144,6 @@ Finally, In the Terminal window you had the netcat listening, you should now hav
 
 https://www.lunasec.io/docs/blog/log4j-zero-day/   
 https://github.com/mbechler/marshalsec   
- https://github.com/christophetd/log4shell-vulnerable-app
 
 ## Contributors
 [@AdamJN](https://github.com/AdamJNew)
