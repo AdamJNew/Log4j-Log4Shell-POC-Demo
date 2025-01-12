@@ -25,6 +25,7 @@ Prerequisites:
 - Ubuntu Server
 
 # Kali Linux
+clone the git repo to your Kali VM
 ## Prepping Java File
 Edit the .java file to enter your local Kali machines IP
 ```
