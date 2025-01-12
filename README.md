@@ -97,6 +97,9 @@ wget https://repo1.maven.org/maven2/org/apache/logging/log4j/log4j-api/2.14.1/lo
 
 To run the Application just run 
 ```bash
+sudo chmod +x run_vulnerable_app.sh
+```
+```bash
 ./run_vulnerable_app.sh
 ```
 
