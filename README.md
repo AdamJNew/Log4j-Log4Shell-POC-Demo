@@ -6,6 +6,7 @@ The scope of this repository is to provide all the components needed to exploit 
 and to show how to exploit it.
 
 The ingredients needed to exploit this vulnerability are the following:
+
 Kali Linux with 
 1. An **LDAP Server** that will redirect the vulnerable application to the exploit.
 2. The Java **Exploit.class** (and the corresponding Exploit.java file) that will be loaded by the Vulnerable application.
